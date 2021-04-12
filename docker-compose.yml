@@ -1,0 +1,49 @@
+version: "3.7"
+services: 
+  db:
+    image: mysql:5.7
+    container_name: phpgraphql-db
+    restart: unless-stopped
+    environment: 
+      MYSQL_ROOT_PASSWORD: admin.root
+    ports: 
+      - 3360:3306
+    volumes: 
+      - ./data-mysql/:/var/lib/mysql
+    networks:
+      - phpgraphql
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpgraphql-pma
+    restart: unless-stopped
+    ports:
+      - 8091:80
+    environment:
+      PMA_ARBITRARY: 0
+      PMA_HOST: db
+      PMA_PORT: 3306
+    networks:
+      - phpgraphql
+    depends_on: 
+      - db
+  app:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    image: phpgraphql-dev
+    container_name: phpgraphql-app
+    restart: unless-stopped
+    working_dir: /var/www/html
+    ports: 
+      - 8090:80
+    volumes: 
+      - ./:/var/www/html
+    networks:
+      - phpgraphql
+    depends_on: 
+      - db
+networks:
+  phpgraphql:
+    driver: bridge
+volumes: 
+  data-mysql:
