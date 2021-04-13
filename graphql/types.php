@@ -10,7 +10,7 @@ $userType = new ObjectType([
     'name' => 'User',
     /**Descripción del Tipo */
     'description' => 'Este es el tipo de dato Usuario',
-    /**Creamos una clausure y pasamos la variable por referencia */
+    /**Creamos una closure y pasamos la variable por referencia */
     'fields' => function () use (&$addressType) {
         return  [
             /**Campos */
